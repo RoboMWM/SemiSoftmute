@@ -63,7 +63,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
         List<String> okPlayers = loadedPlayers.get(event.getPlayer());
         for (Player target : recipients)
         {
-            if (!okPlayers.contains(target))
+            if (!okPlayers.contains(target.getUniqueId().toString()))
                 recipients.remove(target);
         }
         recipients.add(event.getPlayer());
