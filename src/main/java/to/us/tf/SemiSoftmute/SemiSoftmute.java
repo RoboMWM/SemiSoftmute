@@ -133,11 +133,18 @@ public class SemiSoftmute extends JavaPlugin implements Listener
                 sender.sendMessage(okPlayerList.toString());
                 return true;
             }
+            
+            String uuidString = player.getUniqueId().toString();
+
+            if (args[0].equalsIgnoreCase("delete"))
+            {
+                config.set(uuidString, null);
+                saveConfig();
+                sender.sendMessage(player.getName() + " is no longer semisoftmuted.");
+            }
 
             if (args.length < 3)
                 return false;
-
-            String uuidString = player.getUniqueId().toString();
 
             if (args[0].equalsIgnoreCase("add"))
             {
@@ -185,15 +192,9 @@ public class SemiSoftmute extends JavaPlugin implements Listener
                 saveConfig();
                 sender.sendMessage(target.getName() + " will no longer hear " + player.getName());
             }
-
-            if (args[0].equalsIgnoreCase("delete"))
-            {
-                config.set(uuidString, null);
-                saveConfig();
-                sender.sendMessage(player.getName() + " is no longer semisoftmuted.");
-            }
         }
 
+        sender.sendMessage("If you see this message, make a /report");
         return false;
     }
 
