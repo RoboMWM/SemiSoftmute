@@ -66,6 +66,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
             if (!okPlayers.contains(target))
                 recipients.remove(target);
         }
+        recipients.add(event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -133,7 +134,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
                 sender.sendMessage(okPlayerList.toString());
                 return true;
             }
-            
+
             String uuidString = player.getUniqueId().toString();
 
             if (args[0].equalsIgnoreCase("delete"))
