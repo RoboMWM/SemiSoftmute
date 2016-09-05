@@ -1,0 +1,6 @@
+name: SemiSoftmute
+author: RoboMWM
+version: ${project.version}
+main: to.us.tf.SemiSoftmute.SemiSoftmute
+commands:
+    semisoftmute: {}
