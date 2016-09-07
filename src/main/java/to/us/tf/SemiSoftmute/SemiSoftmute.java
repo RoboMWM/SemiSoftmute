@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,6 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -60,13 +62,16 @@ public class SemiSoftmute extends JavaPlugin implements Listener
             return; //Otherwise, do nothing
 
         Set<Player> recipients = event.getRecipients();
+        Set<Player> okRecipients = new HashSet<>();
         List<String> okPlayers = loadedPlayers.get(event.getPlayer());
         for (Player target : recipients)
         {
-            if (!okPlayers.contains(target.getUniqueId().toString()))
-                recipients.remove(target);
+            if (okPlayers.contains(target.getUniqueId().toString()))
+                okRecipients.add(target);
         }
-        recipients.add(event.getPlayer());
+        okRecipients.add(event.getPlayer());
+        recipients.clear();
+        recipients.addAll(okRecipients);
     }
 
     @EventHandler(ignoreCancelled = true)
