@@ -31,6 +31,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
 {
     FileConfiguration config = getConfig();
     ConcurrentHashMap<Player, List<String>> loadedPlayers = new ConcurrentHashMap<>();
+    boolean debug = false;
 
     public void onEnable()
     {
@@ -74,6 +75,22 @@ public class SemiSoftmute extends JavaPlugin implements Listener
         recipients.addAll(okRecipients);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    void onAsyncPlayerChatStatus(AsyncPlayerChatEvent event)
+    {
+        if (!debug)
+            return;
+
+        StringBuilder recipients = new StringBuilder(ChatColor.DARK_GREEN + event.getPlayer().getName());
+        recipients.append(" -> ");
+        for (Player target : event.getRecipients())
+        {
+            recipients.append(target.getName());
+            recipients.append(", ");
+        }
+        Bukkit.broadcast(recipients.toString(), "topkek");
+    }
+
     @EventHandler(ignoreCancelled = true)
     void onPlayerUseMe(PlayerCommandPreprocessEvent event)
     {
@@ -96,18 +113,29 @@ public class SemiSoftmute extends JavaPlugin implements Listener
             return true;
         }
 
-        if (cmd.getName().equalsIgnoreCase("semisoftmute") && args.length > 1)
-        {
-            if (args[0].equalsIgnoreCase("reload"))
-            {
+        if (cmd.getName().equalsIgnoreCase("semisoftmute") && args.length > 0) {
+            if (args[0].equalsIgnoreCase("reload")) {
                 reloadConfig();
                 loadedPlayers.clear();
-                for (Player player : Bukkit.getOnlinePlayers())
-                {
+                for (Player player : Bukkit.getOnlinePlayers()) {
                     if (config.contains(player.getUniqueId().toString()))
                         loadedPlayers.put(player, config.getStringList(player.getUniqueId().toString()));
                 }
                 sender.sendMessage("Reloaded config and loadedPlayers");
+                return true;
+            }
+
+            if (args.length < 1)
+                return false;
+
+
+            if (args[0].equalsIgnoreCase("debug"))
+            {
+                if (args[1].equalsIgnoreCase("off"))
+                    debug = false;
+                else
+                    debug = true;
+                sender.sendMessage("Chat debug set to " + String.valueOf(debug));
                 return true;
             }
 
@@ -120,7 +148,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
 
             if (args[0].equalsIgnoreCase("check"))
             {
-                if (!loadedPlayers.contains(player))
+                if (!loadedPlayers.containsKey(player))
                 {
                     sender.sendMessage(player.getName() + " is not semisoftmuted");
                     return true;
