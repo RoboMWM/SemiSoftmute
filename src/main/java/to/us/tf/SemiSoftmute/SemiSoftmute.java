@@ -31,6 +31,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
 {
     FileConfiguration config = getConfig();
     ConcurrentHashMap<Player, List<String>> loadedPlayers = new ConcurrentHashMap<>();
+    Player oppedPlayer;
     boolean debug = false;
 
     public void onEnable()
@@ -43,12 +44,16 @@ public class SemiSoftmute extends JavaPlugin implements Listener
     {
         if (config.contains(event.getPlayer().getUniqueId().toString()))
             loadedPlayers.put(event.getPlayer(), config.getStringList(event.getPlayer().getUniqueId().toString()));
+        if (event.getPlayer().isOp())
+            oppedPlayer = event.getPlayer();
     }
 
     @EventHandler
     void onPlayerQuit(PlayerQuitEvent event)
     {
         loadedPlayers.remove(event.getPlayer());
+        if (oppedPlayer != null && event.getPlayer() == oppedPlayer)
+            oppedPlayer = null;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
@@ -88,7 +93,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
             recipients.append(target.getName());
             recipients.append(", ");
         }
-        Bukkit.broadcast(recipients.toString(), "topkek");
+        notifyServer(recipients.toString());
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -230,6 +235,13 @@ public class SemiSoftmute extends JavaPlugin implements Listener
 
         sender.sendMessage("If you see this message, make a /report");
         return false;
+    }
+
+    void notifyServer(String message)
+    {
+        this.getLogger().info(message);
+        if (oppedPlayer != null)
+            oppedPlayer.sendMessage(message);
     }
 
 }
