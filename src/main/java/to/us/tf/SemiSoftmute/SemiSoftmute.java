@@ -144,7 +144,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
                 return true;
             }
 
-            Player player = Bukkit.getPlayer(args[1]);
+            Player player = Bukkit.getPlayerExact(args[1]);
             if (player == null)
             {
                 sender.sendMessage(args[1] + " not online");
@@ -194,7 +194,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
                     saveConfig();
                 }
 
-                Player target = Bukkit.getPlayer(args[2]);
+                Player target = Bukkit.getPlayerExact(args[2]);
                 if (target == null)
                 {
                     sender.sendMessage(args[2] + " is not online");
@@ -207,6 +207,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
                 config.set(uuidString, okPlayers);
                 saveConfig();
                 sender.sendMessage(target.getName() + " will now be able to hear " + player.getName());
+                sender.sendMessage("Make sure you /semisoftmute reload");
             }
 
             if (args[0].equalsIgnoreCase("remove"))
@@ -217,7 +218,7 @@ public class SemiSoftmute extends JavaPlugin implements Listener
                     return true;
                 }
 
-                Player target = Bukkit.getPlayer(args[2]);
+                Player target = Bukkit.getPlayerExact(args[2]);
                 if (target == null)
                 {
                     sender.sendMessage(args[2] + " is not online");
@@ -230,6 +231,8 @@ public class SemiSoftmute extends JavaPlugin implements Listener
                 config.set(uuidString, okPlayers);
                 saveConfig();
                 sender.sendMessage(target.getName() + " will no longer hear " + player.getName());
+                sender.sendMessage("Make sure you /semisoftmute reload");
+                return true;
             }
         }
 
